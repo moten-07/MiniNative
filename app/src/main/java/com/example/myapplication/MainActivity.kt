@@ -1,5 +1,7 @@
 package com.example.myapplication
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -19,7 +21,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Example of a call to a native method
-        binding.sampleText.text = NativeLib().stringFromJNI()
+        val nativeLib = NativeLib()
+        binding.sampleText.text = nativeLib.stringFromJNI()
 
+        val inputStream = assets.open("08182119_02.jpg")
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+
+        val cvtBitmap = nativeLib.cvtColor(bitmap.copy(Bitmap.Config.ARGB_8888, true))
+        binding.image.setImageBitmap(cvtBitmap)
     }
 }

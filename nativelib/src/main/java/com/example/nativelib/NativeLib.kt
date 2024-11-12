@@ -10,7 +10,7 @@ class NativeLib {
      */
     external fun stringFromJNI(): String
 
-    private external fun getJNIHeight(bitmap: Bitmap): Bitmap
+     external fun cvtColor(bitmap: Bitmap): Bitmap
 
 
     companion object {
