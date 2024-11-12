@@ -47,7 +47,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
             {"stringFromJNI", "()Ljava/lang/String;",                                 (jstring *) stringFromJNI},
             {"getJNIHeight",  "(Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;", (jobject *) getJNIHeight}
     };
-    jclass cls = pEnv->FindClass("com/example/myapplication/MainActivity");
+    jclass cls = pEnv->FindClass("com/example/nativelib/NativeLib");
     if (cls == NULL) {
         __android_log_write(ANDROID_LOG_ERROR, "jni_replace", "FindClass Error");
         return -1;
@@ -61,4 +61,5 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     //返回java版本
     return JNI_VERSION_1_6;
 }
+
 
