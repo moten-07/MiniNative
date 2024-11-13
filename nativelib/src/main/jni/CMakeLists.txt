@@ -30,7 +30,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 
 
 # https://github.com/nihui/opencv-mobile/
-set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/opencv-mobile-4.10.0-android/sdk/native/jni)
+set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/sdk/native/jni)
 find_package(OpenCV REQUIRED core imgproc)
 
 # Specifies libraries CMake should link to your target library. You
