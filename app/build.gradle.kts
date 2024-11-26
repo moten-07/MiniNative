@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("qapm-plugin")
 }
 
 android {
@@ -36,6 +37,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -50,4 +52,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":nativelib"))
+
+    implementation("com.youzanyun.open.mobile:basic:7.15.2")
+    implementation("com.tencent.qapm:qapmsdk:5.5.0-pub")
 }
