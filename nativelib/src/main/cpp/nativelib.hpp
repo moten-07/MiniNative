@@ -12,8 +12,8 @@
 #include <opencv2/opencv.hpp>
 
 jstring stringFromJNI(
-        JNIEnv *env,
-        jobject /* this */);
+        JNIEnv *_Nullable env,
+        jobject  /* this */);
 
 
 jobject cvtColor(
@@ -21,6 +21,6 @@ jobject cvtColor(
         jobject /* this */,
         jobject bitmap);
 
-void copyPixel4Mat(void* _Nonnull const pixels,const cv::Mat &mat);
+void copyPixel4Mat(void *_Nonnull const pixels, const cv::Mat &mat);
 
 #endif //MY_APPLICATION_NATIVELIB_HPP
