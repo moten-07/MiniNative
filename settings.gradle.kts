@@ -9,9 +9,6 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
-        maven {
-            setUrl("https://qapm-maven.pkg.coding.net/repository/qapm_sdk/android_release/")
-        }
     }
 }
 dependencyResolutionManagement {
@@ -19,12 +16,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven {
-            setUrl("https://maven.youzanyun.com/repository/maven-releases/")
-        }
-        maven {
-            setUrl("https://qapm-maven.pkg.coding.net/repository/qapm_sdk/android_release/")
-        }
+
     }
 }
 
