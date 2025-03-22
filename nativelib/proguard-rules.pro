@@ -19,3 +19,24 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+
+# 混淆部分主要保留原代码的有（不混淆部分）：
+
+# 避免混淆泛型
+-keepattributes Signature
+# 保留内部类
+-keepattributes InnerClasses
+# 保留行号
+-keepattributes SourceFile, LineNumberTable
+
+-printconfiguration
+-keepattributes *Annotation*
+# 序列化的类不混淆
+-keep class * implements android.os.Parcelable
+-keep,allowobfuscation @interface androidx.annotation.Keep
+# 使用keep注解的类及方法不进行混淆
+-keep @androidx.annotation.Keep class **{
+    @androidx.annotation.Keep <fields>;
+    @androidx.annotation.Keep <methods>;
+}
