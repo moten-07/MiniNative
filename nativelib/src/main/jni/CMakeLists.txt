@@ -26,12 +26,17 @@ project("nativelib")
 # used in the AndroidManifest.xml file.
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
-        ../cpp/nativelib.cpp)
+        nativelib.cpp)
 
 
 # https://github.com/nihui/opencv-mobile/
-set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/sdk/native/jni)
-find_package(OpenCV REQUIRED core imgproc)
+set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/opencv-mobile-4.11.0-android/sdk/native/jni)
+find_package(OpenCV REQUIRED)
+
+# https://github.com/Tencent/ncnn
+set(ncnn_DIR ${CMAKE_SOURCE_DIR}/ncnn-20241226-android-vulkan/${ANDROID_ABI}/lib/cmake/ncnn)
+find_package(ncnn REQUIRED)
+
 
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this
@@ -42,4 +47,5 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         log
         jnigraphics
         ${OpenCV_LIBS}
+        ncnn
 )
