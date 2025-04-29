@@ -62,6 +62,8 @@ class MainActivity : AppCompatActivity() {
             val copy = bitmap.copy(Bitmap.Config.ARGB_8888, true)
             val cvtColor = copy.scale(227, 227)
 
+            val color = nativeLib.cvtColor(bitmap)
+
             val cpuDetect = nativeLib.ncnnDetect(cvtColor, false)
             val gpuDetect = nativeLib.ncnnDetect(cvtColor, true)
             val message = """
@@ -69,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                 GPU: $gpuDetect
             """.trimIndent()
             lifecycleScope.launch {
-                bitmapFlow.emit(bitmap)
+                bitmapFlow.emit(color)
                 detectResult.emit(message)
             }
         }
@@ -91,19 +93,9 @@ class MainActivity : AppCompatActivity() {
             register.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-        binding.btnCvtColor.setOnClickListener {
-            lifecycleScope.launch {
-                val bitmap = bitmapFlow.shareIn(lifecycleScope, SharingStarted.Eagerly).first()
-                val cvtColor = nativeLib.cvtColor(bitmap)
-                bitmapFlow.emit(cvtColor)
-            }
-        }
-
         lifecycleScope.launch {
             bitmapFlow.collect {
-                withContext(Dispatchers.Main) {
-                    binding.image.setImageBitmap(it)
-                }
+                binding.image.setImageBitmap(it)
             }
         }
 

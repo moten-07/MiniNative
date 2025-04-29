@@ -10,7 +10,7 @@
 		android:id="@+id/flow"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		app:constraint_referenced_ids="btn_select_system,btn_select,btn_cvtColor,sample_text,image"
+		app:constraint_referenced_ids="btn_select_system,btn_select,,sample_text,image"
 		app:flow_wrapMode="chain"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -29,13 +29,6 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="select_system"
-		android:textAllCaps="false" />
-
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/btn_cvtColor"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="cvtColor"
 		android:textAllCaps="false" />
 
 
