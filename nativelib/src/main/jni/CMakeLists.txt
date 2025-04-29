@@ -24,9 +24,11 @@ project("nativelib")
 # System.loadLibrary() and pass the name of the library defined here;
 # for GameActivity/NativeActivity derived applications, the same library name must be
 # used in the AndroidManifest.xml file.
-add_library(${CMAKE_PROJECT_NAME} SHARED
-        # List C/C++ source files with relative paths to this CMakeLists.txt.
-        nativelib.cpp)
+
+# 动态库
+add_library(${CMAKE_PROJECT_NAME} SHARED nativelib.cpp)
+# 静态库
+#add_library(${CMAKE_PROJECT_NAME} STATIC nativelib.cpp)
 
 
 # https://github.com/nihui/opencv-mobile/
@@ -34,7 +36,7 @@ set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/opencv-mobile-4.11.0-android/sdk/native/jni)
 find_package(OpenCV REQUIRED)
 
 # https://github.com/Tencent/ncnn
-set(ncnn_DIR ${CMAKE_SOURCE_DIR}/ncnn-20241226-android-vulkan/${ANDROID_ABI}/lib/cmake/ncnn)
+set(ncnn_DIR ${CMAKE_SOURCE_DIR}/ncnn-20250428-android-vulkan/${ANDROID_ABI}/lib/cmake/ncnn)
 find_package(ncnn REQUIRED)
 
 
@@ -48,4 +50,5 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         jnigraphics
         ${OpenCV_LIBS}
         ncnn
+        -static-openmp
 )
