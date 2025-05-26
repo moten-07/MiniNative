@@ -1,6 +1,5 @@
 package com.example.myapplication
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -15,6 +14,7 @@ import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.nativelib.NativeLib
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,52 +24,38 @@ class MainActivity : AppCompatActivity() {
     private val bitmapFlow = MutableSharedFlow<Bitmap>(replay = 1)
     private val detectResult = MutableSharedFlow<String>()
 
-    private val register =
-        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
-            if (it == null) {
-                return@registerForActivityResult
-            }
-            val inputStream = contentResolver.openInputStream(it)
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            val copy = bitmap.copy(Bitmap.Config.ARGB_8888, true)
-            val cvtColor = copy.scale(227, 227)
-
-            val cpuDetect = nativeLib.ncnnDetect(cvtColor, false)
-            val gpuDetect = nativeLib.ncnnDetect(cvtColor, true)
-            val message = """
-                CPU:$cpuDetect
-                GPU: $gpuDetect
-            """.trimIndent()
-            lifecycleScope.launch {
-                bitmapFlow.emit(bitmap)
-                detectResult.emit(message)
-            }
+    private fun updateImage(inputStream: InputStream?) {
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+        val copy = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val cvtColor = copy.scale(WIDTH, HEIGHT)
+        val cpuDetect = nativeLib.ncnnDetect(cvtColor, false)
+        val gpuDetect = nativeLib.ncnnDetect(cvtColor, true)
+        val message = """
+                    CPU:$cpuDetect
+                    GPU: $gpuDetect
+                """.trimIndent()
+        lifecycleScope.launch {
+            bitmapFlow.emit(bitmap)
+            detectResult.emit(message)
         }
+    }
 
-    private val register30 =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode != Activity.RESULT_OK) {
-                return@registerForActivityResult
-            }
-            val uri = it.data?.data ?: return@registerForActivityResult
-            val inputStream = contentResolver.openInputStream(uri)
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            val copy = bitmap.copy(Bitmap.Config.ARGB_8888, true)
-            val cvtColor = copy.scale(227, 227)
-
-            val color = nativeLib.cvtColor(bitmap)
-
-            val cpuDetect = nativeLib.ncnnDetect(cvtColor, false)
-            val gpuDetect = nativeLib.ncnnDetect(cvtColor, true)
-            val message = """
-                CPU:$cpuDetect
-                GPU: $gpuDetect
-            """.trimIndent()
-            lifecycleScope.launch {
-                bitmapFlow.emit(color)
-                detectResult.emit(message)
-            }
+    private val register = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
+        if (it == null) {
+            return@registerForActivityResult
         }
+        val inputStream = contentResolver.openInputStream(it)
+        updateImage(inputStream)
+    }
+
+    private val register30 = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode != RESULT_OK) {
+            return@registerForActivityResult
+        }
+        val uri = it.data?.data ?: return@registerForActivityResult
+        val inputStream = contentResolver.openInputStream(uri)
+        updateImage(inputStream)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,8 +66,7 @@ class MainActivity : AppCompatActivity() {
         nativeLib.ncnnInit(assets)
 
         binding.btnSelect.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-                .setType("image/*")
+            val intent = Intent(Intent.ACTION_PICK).setType("image/*")
             register30.launch(intent)
         }
         binding.btnSelectSystem.setOnClickListener {
@@ -99,5 +84,10 @@ class MainActivity : AppCompatActivity() {
                 binding.sampleText.text = it
             }
         }
+    }
+
+    companion object {
+        private const val WIDTH = 227
+        private const val HEIGHT = 227
     }
 }
